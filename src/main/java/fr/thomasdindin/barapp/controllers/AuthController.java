@@ -1,5 +1,6 @@
 package fr.thomasdindin.barapp.controllers;
 
+import fr.thomasdindin.barapp.dto.JwtResponse;
 import fr.thomasdindin.barapp.dto.LoginRequest;
 import fr.thomasdindin.barapp.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class AuthController {
     private final JwtUtil               jwtUtil;
 
     @PostMapping(path = "/login")
-    public ResponseEntity<String> login(
+    public ResponseEntity<JwtResponse> login(
             @Validated @RequestBody LoginRequest request) {
 
         authenticationManager.authenticate(
@@ -41,7 +42,7 @@ public class AuthController {
 
         return ResponseEntity
                 .ok()
-                .body(jwt);
+                .body(new JwtResponse(jwt));
     }
 }
 
