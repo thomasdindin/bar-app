@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15           # ou la version de votre choix
+    container_name: my_postgres  # nom du conteneur
+    restart: always
+    environment:
+      POSTGRES_USER: springuser       # nom d’utilisateur
+      POSTGRES_PASSWORD: springpass   # mot de passe
+      POSTGRES_DB: barapp           # nom de la base par défaut
+    ports:
+      - "5432:5432"            # mappe le port de l’hôte au port du conteneur
+    volumes:
+      - db_data:/var/lib/postgresql/data  # persistance des données
+
+volumes:
+  db_data:
