@@ -3,10 +3,15 @@ package fr.thomasdindin.barapp.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.Date;
 
 @Component
@@ -17,6 +22,18 @@ public class JwtUtil {
 
     @Value("${jwt.expiration-ms}")
     private long expirationMs;
+    private Key hmacKey;               // la clé HMAC dérivée
+
+    @PostConstruct
+    public void init() {
+        // Si ta secretKey est une string simple :
+        byte[] keyBytes = secretKey.getBytes(StandardCharsets.UTF_8);
+
+        // Si elle est base64-encodée, décode plutôt avec :
+        // byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+
+        this.hmacKey = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     public String generateToken(UserDetails userDetails) {
         Date now = new Date();
@@ -25,7 +42,7 @@ public class JwtUtil {
                 .subject(userDetails.getUsername())
                 .issuedAt(now)
                 .expiration(expiry)
-                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .signWith(hmacKey)
                 .compact();
     }
 
@@ -45,8 +62,9 @@ public class JwtUtil {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
+                .setSigningKey(hmacKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }
