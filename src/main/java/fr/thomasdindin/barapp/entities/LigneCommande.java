@@ -27,5 +27,4 @@ public class LigneCommande {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_variante", nullable = false)
     private Variante idVariante;
-
 }
