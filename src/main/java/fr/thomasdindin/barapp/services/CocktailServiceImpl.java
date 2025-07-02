@@ -3,8 +3,10 @@ package fr.thomasdindin.barapp.services;
 import fr.thomasdindin.barapp.dto.CocktailDto;
 import fr.thomasdindin.barapp.entities.Categorie;
 import fr.thomasdindin.barapp.entities.Cocktail;
+import fr.thomasdindin.barapp.entities.Variante;
 import fr.thomasdindin.barapp.mappers.CocktailMapper;
 import fr.thomasdindin.barapp.repositories.CocktailRepository;
+import fr.thomasdindin.barapp.repositories.VarianteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.ResourceAccessException;
@@ -17,10 +19,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CocktailServiceImpl implements CocktailService {
     private final CocktailRepository cocktailRepository;
+    private final VarianteRepository varianteRepository;
 
     @Override
     public CocktailDto createCocktail(CocktailDto cocktail) {
-        return CocktailMapper.toDto(cocktailRepository.save(CocktailMapper.toEntity(cocktail)));
+        Cocktail entity = CocktailMapper.toEntity(cocktail);
+        // Extract variants and clear to get generated ID first
+        java.util.Set<Variante> variants = new java.util.LinkedHashSet<>(entity.getVariantes());
+        entity.getVariantes().clear();
+        Cocktail saved = cocktailRepository.save(entity);
+        variants.forEach(v -> v.setIdCocktail(saved.getId()));
+        varianteRepository.saveAll(variants);
+        saved.setVariantes(variants);
+        return CocktailMapper.toDto(saved);
     }
 
     @Override
@@ -43,7 +54,16 @@ public class CocktailServiceImpl implements CocktailService {
 
     @Override
     public CocktailDto updateCocktail(CocktailDto details) {
-        return CocktailMapper.toDto(cocktailRepository.save(CocktailMapper.toEntity(details)));
+        Cocktail entity = CocktailMapper.toEntity(details);
+        java.util.Set<Variante> variants = new java.util.LinkedHashSet<>(entity.getVariantes());
+        entity.getVariantes().clear();
+        Cocktail saved = cocktailRepository.save(entity);
+        // remove existing variants linked to this cocktail
+        varianteRepository.deleteAll(varianteRepository.findByIdCocktail(saved.getId()));
+        variants.forEach(v -> v.setIdCocktail(saved.getId()));
+        varianteRepository.saveAll(variants);
+        saved.setVariantes(variants);
+        return CocktailMapper.toDto(saved);
     }
 
     @Override
