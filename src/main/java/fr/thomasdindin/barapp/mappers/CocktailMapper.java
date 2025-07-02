@@ -36,6 +36,7 @@ public class CocktailMapper {
     public static Cocktail toEntity(CocktailDto dto) {
         if (dto == null) return null;
         Cocktail entity = new Cocktail();
+        entity.setId(dto.id());
         entity.setLibelle(dto.libelle());
         entity.setDescription(dto.description());
         // category must be fetched by service / repository
