@@ -1,5 +1,6 @@
 package fr.thomasdindin.barapp.controllers;
 
+import fr.thomasdindin.barapp.dto.IngredientDto;
 import fr.thomasdindin.barapp.entities.Ingredient;
 import fr.thomasdindin.barapp.services.IngredientService;
 import lombok.RequiredArgsConstructor;
@@ -15,23 +16,23 @@ public class IngredientController {
     private final IngredientService ingredientService;
 
     @PostMapping
-    public ResponseEntity<Ingredient> createIngredient(@RequestBody Ingredient ingredient) {
+    public ResponseEntity<IngredientDto> createIngredient(@RequestBody IngredientDto ingredient) {
         return ResponseEntity.ok(ingredientService.createIngredient(ingredient));
     }
 
     @GetMapping
-    public ResponseEntity<List<Ingredient>> getAllIngredients() {
+    public ResponseEntity<List<IngredientDto>> getAllIngredients() {
         return ResponseEntity.ok(ingredientService.getAllIngredients());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Ingredient> getIngredientById(@PathVariable int id) {
+    public ResponseEntity<IngredientDto> getIngredientById(@PathVariable int id) {
         return ResponseEntity.ok(ingredientService.getIngredientById(id));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Ingredient> updateIngredient(@PathVariable int id, @RequestBody Ingredient ingredient) {
-        return ResponseEntity.ok(ingredientService.updateIngredient(id, ingredient));
+    @PutMapping
+    public ResponseEntity<IngredientDto> updateIngredient(@RequestBody IngredientDto ingredient) {
+        return ResponseEntity.ok(ingredientService.updateIngredient(ingredient));
     }
 
     @DeleteMapping("/{id}")

@@ -2,7 +2,6 @@ package fr.thomasdindin.barapp.security;
 
 import fr.thomasdindin.barapp.services.UtilisateurServiceImpl;
 import fr.thomasdindin.barapp.utils.JwtUtil;
-import fr.thomasdindin.barapp.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,6 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -29,6 +33,20 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        // Avec allowCredentials=true, on ne peut *pas* utiliser "*" ici :
+        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     /**
@@ -57,6 +75,7 @@ public class SecurityConfig {
                                                    JwtUtil jwtUtil,
                                                    UtilisateurServiceImpl utilisateurServiceImpl) throws Exception {
         http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 // désactivation CSRF (adapter si vous avez des formulaires)
                 .csrf(AbstractHttpConfigurer::disable)
 
@@ -66,10 +85,9 @@ public class SecurityConfig {
 
                 // règles d’accès
                 .authorizeHttpRequests(auth -> auth
-                        // inscription sans auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
-                        // tout le reste nécessite authentification
                         .anyRequest().authenticated())
 
                 // on désactive formLogin et HTTP Basic par défaut

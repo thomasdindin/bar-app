@@ -1,19 +1,27 @@
 package fr.thomasdindin.barapp.services;
 
+import fr.thomasdindin.barapp.dto.CocktailDto;
+import fr.thomasdindin.barapp.entities.Categorie;
 import fr.thomasdindin.barapp.entities.Cocktail;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CocktailService {
 
-    Cocktail createCocktail(Cocktail cocktail);
+    CocktailDto createCocktail(CocktailDto cocktail);
 
-    List<Cocktail> getAllCocktails();
-    List<Cocktail> getCocktailsByCategorie(String categorie);
+    List<CocktailDto> getAllCocktails();
+    List<CocktailDto> getCocktailsByCategorie(String categorie);
 
-    Cocktail getCocktailById(int id);
+    CocktailDto getCocktailById(int id);
 
-    Cocktail updateCocktail(int id, Cocktail cocktail);
+    CocktailDto updateCocktail(CocktailDto cocktail);
 
     void deleteCocktail(int id);
+
+    /**
+     * Retourne tous les cocktails groupés par catégorie.
+     */
+    Map<String, List<CocktailDto>> getCocktailsGroupedByCategorie();
 }

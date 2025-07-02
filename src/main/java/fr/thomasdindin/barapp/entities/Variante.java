@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "variante")
+@Table(name = "variantes")
 public class Variante {
     @Id
     @ColumnDefault("nextval('variante_id_variante_seq')")

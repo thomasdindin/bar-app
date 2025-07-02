@@ -24,7 +24,7 @@ public class UtilisateurController {
     @PostMapping("/register")
     public ResponseEntity<Utilisateur> register(
             @Validated @RequestBody UserRegistrationDto dto) {
-        Utilisateur created = userService.register(dto);
+        userService.register(dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED).build();
     }

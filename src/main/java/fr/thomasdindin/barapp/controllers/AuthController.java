@@ -10,10 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/auth")
@@ -27,22 +24,29 @@ public class AuthController {
     @PostMapping(path = "/login")
     public ResponseEntity<JwtResponse> login(
             @Validated @RequestBody LoginRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
 
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+            UserDetails userDetails =
+                    userDetailsService.loadUserByUsername(request.getEmail());
 
-        UserDetails userDetails =
-                userDetailsService.loadUserByUsername(request.getEmail());
+            String jwt = jwtUtil.generateToken(userDetails);
 
-        String jwt = jwtUtil.generateToken(userDetails);
+            return ResponseEntity
+                    .ok()
+                    .body(new JwtResponse(jwt, userDetails.getAuthorities().stream()
+                            .findFirst()
+                            .map(Object::toString)
+                            .orElse("CLIENT")));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new JwtResponse("Authentication failed", ""));
+        }
 
-        return ResponseEntity
-                .ok()
-                .body(new JwtResponse(jwt));
     }
 }
 

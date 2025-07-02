@@ -8,12 +8,16 @@ CREATE TABLE IF NOT EXISTS utilisateur (
                              role              VARCHAR(20)   NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS categorie (
+                                         id_categorie   SERIAL PRIMARY KEY,
+                                         libelle        VARCHAR(100) NOT NULL UNIQUE
+);
+
 CREATE TABLE IF NOT EXISTS cocktail (
                           id_cocktail SERIAL    PRIMARY KEY,
                           libelle     VARCHAR(100) NOT NULL,
                           description TEXT,
-                          categorie   VARCHAR(50),
-                          image       VARCHAR(255)
+                          id_categorie INT NOT NULL REFERENCES categorie(id_categorie) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS ingredients (
@@ -50,3 +54,4 @@ CREATE TABLE IF NOT EXISTS ligne_commande (
                                 id_variante   INT NOT NULL REFERENCES variantes(id_variante),
                                 id_commande   INT NOT NULL REFERENCES commande(id_commande)
 );
+

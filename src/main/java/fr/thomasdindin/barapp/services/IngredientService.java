@@ -1,17 +1,18 @@
 package fr.thomasdindin.barapp.services;
 
+import fr.thomasdindin.barapp.dto.IngredientDto;
 import fr.thomasdindin.barapp.entities.Ingredient;
 
 import java.util.List;
 
 public interface IngredientService {
-    Ingredient createIngredient(Ingredient ingredient);
+    IngredientDto createIngredient(IngredientDto ingredient);
 
-    List<Ingredient> getAllIngredients();
+    List<IngredientDto> getAllIngredients();
 
-    Ingredient getIngredientById(int id);
+    IngredientDto getIngredientById(int id);
 
-    Ingredient updateIngredient(int id, Ingredient ingredient);
+    IngredientDto updateIngredient(IngredientDto ingredient);
 
     void deleteIngredient(int id);
 }

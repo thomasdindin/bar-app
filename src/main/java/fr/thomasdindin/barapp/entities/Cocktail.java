@@ -1,5 +1,8 @@
 package fr.thomasdindin.barapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,12 +27,6 @@ public class Cocktail {
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @Column(name = "categorie", length = 100)
-    private String categorie;
-
-    @Column(name = "image")
-    private String image;
-
     @ManyToMany
     @JoinTable(name = "composition",
             joinColumns = @JoinColumn(name = "id_cocktail"),
@@ -38,5 +35,23 @@ public class Cocktail {
 
     @OneToMany(mappedBy = "idCocktail")
     private Set<Variante> variantes = new LinkedHashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(
+            name = "id_categorie",
+            nullable = false,
+            foreignKey = @ForeignKey(name = "fk_cocktail_categorie")
+    )
+    @JsonIgnore                             // 1. on cache l’objet complet
+    private Categorie categorie;
+
+    /**
+     * 2. On expose côté JSON la seule donnée « libellé » de la catégorie.
+     *    Jackson appellera automatiquement ce getter.
+     */
+    @JsonProperty("categorie")
+    public String getCategorieLibelle() {
+        return categorie != null ? categorie.getLibelle() : null;
+    }
 
 }
