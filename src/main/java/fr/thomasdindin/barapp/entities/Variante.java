@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @Table(name = "variantes")
 public class Variante {
     @Id
-    @ColumnDefault("nextval('variante_id_variante_seq')")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_variante", nullable = false)
     private Integer id;
 
@@ -26,6 +26,6 @@ public class Variante {
     private BigDecimal prix;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "id_cocktail", nullable = false)
+    @Column(name = "id_cocktail", nullable = false)
     private int idCocktail;
 }
