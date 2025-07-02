@@ -36,7 +36,7 @@ public class CommandeServiceImpl implements CommandeService {
         if (dto == null || dto.idUtilisateur() == null) {
             throw new IllegalArgumentException("Commande sans utilisateur");
         }
-        Utilisateur user = utilisateurRepository.findById(dto.idUtilisateur().id())
+        Utilisateur user = utilisateurRepository.findById(dto.idUtilisateur())
                 .orElseThrow(() -> new ResourceAccessException("Utilisateur non trouve"));
         Commande commande = new Commande();
         commande.setDateCommande(Instant.now());
@@ -108,5 +108,12 @@ public class CommandeServiceImpl implements CommandeService {
         commande.setStatut(newStatut);
         commandeRepository.save(commande);
         return CommandeMapper.toDto(commande);
+    }
+
+    @Override
+    public List<CommandeDto> getCommandesByClientId(int idClient) {
+        return commandeRepository.findByIdUtilisateur_Id(idClient).stream()
+                .map(CommandeMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -35,6 +37,9 @@ public class Utilisateur {
 
     @Column(name = "role", nullable = false, length = 50)
     private Role role;
+
+    @OneToMany(mappedBy = "idUtilisateur")
+    private Set<Commande> commandes = new LinkedHashSet<>();
 
     @PrePersist
     private void prePersist() {

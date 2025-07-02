@@ -50,7 +50,6 @@ CREATE TABLE IF NOT EXISTS ligne_commande (
                                 id_ligne      SERIAL PRIMARY KEY,
                                 qte           INT           NOT NULL CHECK (qte > 0),
                                 statut        VARCHAR(20)   NOT NULL,
-                                taille        CHAR(1)       NOT NULL,
                                 id_variante   INT NOT NULL REFERENCES variantes(id_variante),
                                 id_commande   INT NOT NULL REFERENCES commande(id_commande)
 );

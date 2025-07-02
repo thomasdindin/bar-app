@@ -2,6 +2,8 @@ package fr.thomasdindin.barapp.controllers;
 
 import fr.thomasdindin.barapp.dto.JwtResponse;
 import fr.thomasdindin.barapp.dto.LoginRequest;
+import fr.thomasdindin.barapp.entities.Utilisateur;
+import fr.thomasdindin.barapp.services.UtilisateurServiceImpl;
 import fr.thomasdindin.barapp.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService    userDetailsService;
     private final JwtUtil               jwtUtil;
+    private final UtilisateurServiceImpl utilisateurService;
 
     @PostMapping(path = "/login")
     public ResponseEntity<JwtResponse> login(
@@ -35,6 +38,8 @@ public class AuthController {
             UserDetails userDetails =
                     userDetailsService.loadUserByUsername(request.getEmail());
 
+            Utilisateur user = utilisateurService.getByEmail(request.getEmail());
+
             String jwt = jwtUtil.generateToken(userDetails);
 
             return ResponseEntity
@@ -42,9 +47,9 @@ public class AuthController {
                     .body(new JwtResponse(jwt, userDetails.getAuthorities().stream()
                             .findFirst()
                             .map(Object::toString)
-                            .orElse("CLIENT")));
+                            .orElse("CLIENT"), user.getId().toString()));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(new JwtResponse("Authentication failed", ""));
+            return ResponseEntity.badRequest().body(new JwtResponse("Authentication failed", "", ""));
         }
 
     }

@@ -5,13 +5,5 @@ import lombok.Value;
 
 import java.io.Serializable;
 
-/**
- * DTO for {@link LigneCommande}
- */
-@Value
-public class LigneCommandeDto implements Serializable {
-    Integer id;
-    Integer qte;
-    String statut;
-    VarianteDto idVariante;
+public record LigneCommandeDto(Integer id, Integer qte, String statut, VarianteDto idVariante) implements Serializable {
 }

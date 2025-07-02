@@ -17,12 +17,17 @@ public class CommandeController {
     private final CommandeService commandeService;
 
     @PostMapping
-    @PreAuthorize("hasRole('CLIENT')")
     public ResponseEntity<CommandeDto> createCommande(@RequestBody CommandeDto commande) {
         return ResponseEntity.ok(commandeService.createCommande(commande));
     }
 
+    @GetMapping("/client/{id}")
+    public ResponseEntity<List<CommandeDto>> getCommandesByClientId(@PathVariable int id) {
+        return ResponseEntity.ok(commandeService.getCommandesByClientId(id));
+    }
+
     @GetMapping
+    @PreAuthorize("hasRole('BARMAKER')")
     public ResponseEntity<List<CommandeDto>> getAll() {
         return ResponseEntity.ok(commandeService.getAllCommandes());
     }

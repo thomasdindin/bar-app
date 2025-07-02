@@ -7,14 +7,6 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Set;
 
-/**
- * DTO for {@link Commande}
- */
-@Value
-public class CommandeDto implements Serializable {
-    Integer id;
-    Instant dateCommande;
-    String statut;
-    UtilisateurDto idUtilisateur;
-    Set<LigneCommandeDto> ligneCommandes;
+public record CommandeDto(Integer id, Instant dateCommande, String statut, Integer idUtilisateur,
+                          Set<LigneCommandeDto> ligneCommandes) implements Serializable {
 }

@@ -5,12 +5,5 @@ import lombok.Value;
 
 import java.io.Serializable;
 
-/**
- * DTO for {@link Utilisateur}
- */
-@Value
-public class UtilisateurDto implements Serializable {
-    Integer id;
-    String nom;
-    String prenom;
+public record UtilisateurDto(Integer id, String nom, String prenom) implements Serializable {
 }

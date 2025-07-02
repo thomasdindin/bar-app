@@ -13,11 +13,6 @@ import java.util.stream.Collectors;
 public class CommandeMapper {
     public static CommandeDto toDto(Commande entity) {
         if (entity == null) return null;
-        Utilisateur u = entity.getIdUtilisateur();
-        UtilisateurDto userDto = null;
-        if (u != null) {
-            userDto = new UtilisateurDto(u.getId(), u.getNom(), u.getPrenom());
-        }
         Set<LigneCommandeDto> lignes = entity.getLigneCommandes().stream()
                 .map(LigneCommandeMapper::toDto)
                 .collect(Collectors.toSet());
@@ -25,7 +20,7 @@ public class CommandeMapper {
                 entity.getId(),
                 entity.getDateCommande(),
                 entity.getStatut(),
-                userDto,
+                entity.getIdUtilisateur().getId(),
                 lignes
         );
     }
@@ -38,9 +33,6 @@ public class CommandeMapper {
         entity.setStatut(dto.statut());
         if (dto.idUtilisateur() != null) {
             Utilisateur user = new Utilisateur();
-            user.setId(dto.idUtilisateur().id());
-            user.setNom(dto.idUtilisateur().nom());
-            user.setPrenom(dto.idUtilisateur().prenom());
             entity.setIdUtilisateur(user);
         }
         if (dto.ligneCommandes() != null) {

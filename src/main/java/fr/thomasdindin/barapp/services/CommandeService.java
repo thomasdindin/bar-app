@@ -10,4 +10,5 @@ public interface CommandeService {
     List<CommandeDto> getAllCommandes();
     CommandeDto getCommandeById(int id);
     CommandeDto updateLigneStatus(int idLigne, StatutCommande statut);
+    List<CommandeDto> getCommandesByClientId(int idClient);
 }
