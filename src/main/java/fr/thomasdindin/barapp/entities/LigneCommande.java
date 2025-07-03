@@ -21,7 +21,7 @@ public class LigneCommande {
     @Column(name = "qte", nullable = false)
     private Integer qte;
 
-    @Column(name = "statut", nullable = false, length = 20)
+    @Column(name = "statut", nullable = false, length = 50)
     private String statut;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

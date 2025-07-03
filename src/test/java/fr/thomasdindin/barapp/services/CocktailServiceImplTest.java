@@ -1,3 +1,5 @@
+package fr.thomasdindin.barapp.services;
+
 import fr.thomasdindin.barapp.dto.CategorieDto;
 import fr.thomasdindin.barapp.dto.CocktailDto;
 import fr.thomasdindin.barapp.dto.VarianteDto;
@@ -97,5 +99,43 @@ class CocktailServiceImplTest {
         when(cocktailRepository.findById(1)).thenReturn(Optional.of(e));
         service.deleteCocktail(1);
         verify(cocktailRepository).delete(e);
+    }
+
+    @Test
+    void getAllcocktails() {
+    Cocktail c1 = new Cocktail();
+        c1.setId(1);
+        c1.setLibelle("c1");
+        Categorie cat1 = new Categorie();
+        cat1.setIdCategorie(1);
+        cat1.setLibelle("A");
+        c1.setCategorie(cat1);
+        Cocktail c2 = new Cocktail();
+        c2.setId(2);
+        c2.setLibelle("c2");
+        c2.setCategorie(cat1);
+        when(cocktailRepository.findAll()).thenReturn(List.of(c1, c2));
+
+        List<CocktailDto> cocktails = service.getAllCocktails();
+
+        assertThat(cocktails).hasSize(2);
+        assertThat(cocktails.get(0).id()).isEqualTo(1);
+        assertThat(cocktails.get(0).libelle()).isEqualTo("c1");
+    }
+
+    @Test
+    void getCocktailsById() {
+        Cocktail c1 = new Cocktail();
+        c1.setId(1);
+        c1.setLibelle("c1");
+        Categorie cat1 = new Categorie();
+        cat1.setIdCategorie(1);
+        cat1.setLibelle("A");
+
+        c1.setCategorie(cat1);
+        when(cocktailRepository.findById(1)).thenReturn(Optional.of(c1));
+        CocktailDto cocktail = service.getCocktailById(1);
+        assertThat(cocktail.id()).isEqualTo(1);
+        assertThat(cocktail.libelle()).isEqualTo("c1");
     }
 }

@@ -1,3 +1,5 @@
+package fr.thomasdindin.barapp.services;
+
 import fr.thomasdindin.barapp.dto.CommandeDto;
 import fr.thomasdindin.barapp.dto.LigneCommandeDto;
 import fr.thomasdindin.barapp.dto.VarianteDto;
@@ -72,11 +74,12 @@ class CommandeServiceImplTest {
     void updateLigneStatus_updatesCommandeStatut() {
         Commande commande = new Commande();
         commande.setId(10);
-        commande.setStatut(StatutCommande.EN_ATTENTE.getLibelle());
+        commande.setStatut(StatutCommande.EN_ATTENTE.name());
+        commande.setIdUtilisateur(new Utilisateur());
         LigneCommande ligne = new LigneCommande();
         ligne.setId(3);
         ligne.setIdCommande(commande);
-        ligne.setStatut(StatutCommande.EN_ATTENTE.getLibelle());
+        ligne.setStatut(StatutCommande.EN_ATTENTE.name());
         commande.setLigneCommandes(new LinkedHashSet<>(Collections.singleton(ligne)));
 
         when(ligneCommandeRepository.findById(3)).thenReturn(Optional.of(ligne));
@@ -86,8 +89,8 @@ class CommandeServiceImplTest {
 
         CommandeDto dto = service.updateLigneStatus(3, StatutCommande.EN_PREPARATION);
 
-        assertThat(commande.getStatut()).isEqualTo(StatutCommande.EN_PREPARATION.getLibelle());
-        assertThat(dto.statut()).isEqualTo(StatutCommande.EN_PREPARATION.getLibelle());
+        assertThat(commande.getStatut()).isEqualTo(StatutCommande.EN_PREPARATION.name());
+        assertThat(dto.statut()).isEqualTo(StatutCommande.EN_PREPARATION.name());
     }
 
     @Test
@@ -95,5 +98,35 @@ class CommandeServiceImplTest {
         when(commandeRepository.findById(1)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.getCommandeById(1))
                 .isInstanceOf(ResourceAccessException.class);
+    }
+
+    @Test
+    void getAllCommandes() {
+        Commande commande = new Commande();
+        commande.setId(1);
+        commande.setStatut(StatutCommande.EN_ATTENTE.name());
+        commande.setIdUtilisateur(user);
+        when(commandeRepository.findAll()).thenReturn(Collections.singletonList(commande));
+
+        var commandes = service.getAllCommandes();
+
+        assertThat(commandes).hasSize(1);
+        assertThat(commandes.get(0).id()).isEqualTo(1);
+        assertThat(commandes.get(0).statut()).isEqualTo(StatutCommande.EN_ATTENTE.name());
+    }
+
+    @Test
+    void getCommandeByClientId() {
+        Commande commande = new Commande();
+        commande.setId(1);
+        commande.setStatut(StatutCommande.EN_ATTENTE.name());
+        commande.setIdUtilisateur(user);
+        when(commandeRepository.findByIdUtilisateur_Id(1)).thenReturn(Collections.singletonList(commande));
+
+        var commandes = service.getCommandesByClientId(1);
+
+        assertThat(commandes).hasSize(1);
+        assertThat(commandes.get(0).id()).isEqualTo(1);
+        assertThat(commandes.get(0).statut()).isEqualTo(StatutCommande.EN_ATTENTE.name());
     }
 }

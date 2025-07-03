@@ -1,3 +1,5 @@
+package fr.thomasdindin.barapp.services;
+
 import fr.thomasdindin.barapp.dto.UserRegistrationDto;
 import fr.thomasdindin.barapp.entities.Utilisateur;
 import fr.thomasdindin.barapp.enums.Role;

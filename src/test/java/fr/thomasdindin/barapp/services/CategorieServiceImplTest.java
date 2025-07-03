@@ -1,3 +1,5 @@
+package fr.thomasdindin.barapp.services;
+
 import fr.thomasdindin.barapp.dto.CategorieDto;
 import fr.thomasdindin.barapp.entities.Categorie;
 import fr.thomasdindin.barapp.repositories.CategorieRepository;

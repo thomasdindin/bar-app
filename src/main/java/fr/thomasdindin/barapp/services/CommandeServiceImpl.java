@@ -80,7 +80,7 @@ public class CommandeServiceImpl implements CommandeService {
     public CommandeDto updateLigneStatus(int idLigne, StatutCommande statut) {
         LigneCommande ligne = ligneCommandeRepository.findById(idLigne)
                 .orElseThrow(() -> new ResourceAccessException("Ligne"+idLigne+" not found"));
-        ligne.setStatut(statut.getLibelle());
+        ligne.setStatut(statut.name());
         ligneCommandeRepository.save(ligne);
 
         Commande commande = commandeRepository.findById(ligne.getIdCommande().getId())
@@ -89,21 +89,21 @@ public class CommandeServiceImpl implements CommandeService {
         boolean allDone = true;
         boolean anyPrep = false;
         for (LigneCommande lc : commande.getLigneCommandes()) {
-            String st = lc.getId().equals(idLigne) ? statut.getLibelle() : lc.getStatut();
-            if (!StatutCommande.TERMINE.getLibelle().equals(st)) {
+            String st = lc.getId().equals(idLigne) ? statut.name() : lc.getStatut();
+            if (!StatutCommande.TERMINEE.name().equals(st)) {
                 allDone = false;
             }
-            if (StatutCommande.EN_PREPARATION.getLibelle().equals(st)) {
+            if (StatutCommande.EN_PREPARATION.name().equals(st)) {
                 anyPrep = true;
             }
         }
         String newStatut = commande.getStatut();
         if (allDone) {
-            newStatut = StatutCommande.TERMINE.getLibelle();
+            newStatut = StatutCommande.TERMINEE.name();
         } else if (anyPrep) {
-            newStatut = StatutCommande.EN_PREPARATION.getLibelle();
+            newStatut = StatutCommande.EN_PREPARATION.name();
         } else {
-            newStatut = StatutCommande.EN_ATTENTE.getLibelle();
+            newStatut = StatutCommande.EN_ATTENTE.name();
         }
         commande.setStatut(newStatut);
         commandeRepository.save(commande);

@@ -1,3 +1,5 @@
+package fr.thomasdindin.barapp.services;
+
 import fr.thomasdindin.barapp.dto.IngredientDto;
 import fr.thomasdindin.barapp.entities.Ingredient;
 import fr.thomasdindin.barapp.repositories.IngredientRepository;
