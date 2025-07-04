@@ -6,6 +6,7 @@ import fr.thomasdindin.barapp.mappers.IngredientMapper;
 import fr.thomasdindin.barapp.repositories.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class IngredientServiceImpl implements IngredientService {
     private final IngredientRepository ingredientRepository;
 
     @Override
+    @Transactional
     public IngredientDto createIngredient(IngredientDto ingredient) {
         return IngredientMapper.toDto(ingredientRepository.save(IngredientMapper.toEntity(ingredient)));
     }
@@ -34,11 +36,13 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     @Override
+    @Transactional
     public IngredientDto updateIngredient(IngredientDto details) {
         return IngredientMapper.toDto(ingredientRepository.save(IngredientMapper.toEntity(details)));
     }
 
     @Override
+    @Transactional
     public void deleteIngredient(int id) {
         ingredientRepository.delete(ingredientRepository.findById(id)
                 .orElseThrow(() -> new ResourceAccessException("Ingredient with id " + id + " not found")));

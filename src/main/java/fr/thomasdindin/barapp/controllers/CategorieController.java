@@ -5,6 +5,7 @@ import fr.thomasdindin.barapp.entities.Categorie;
 import fr.thomasdindin.barapp.services.CategorieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,16 +27,19 @@ public class CategorieController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('BARMAKER')")
     public ResponseEntity<CategorieDto> createCategory(@RequestBody CategorieDto categorie) {
         return ResponseEntity.ok(categorieService.createCategory(categorie));
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('BARMAKER')")
     public ResponseEntity<CategorieDto> updateCategory(@RequestBody CategorieDto categorie) {
         return ResponseEntity.ok(categorieService.updateCategory(categorie));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('BARMAKER')")
     public ResponseEntity<Void> deleteCategory(@PathVariable("id") int id) {
         categorieService.deleteCategory(id);
         return ResponseEntity.noContent().build();

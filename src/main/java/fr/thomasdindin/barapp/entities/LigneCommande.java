@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "ligne_commande")
 public class LigneCommande {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_ligne", nullable = false)
     private Integer id;
 

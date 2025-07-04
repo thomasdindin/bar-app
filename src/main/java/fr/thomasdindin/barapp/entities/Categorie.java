@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity(name = "categorie")
 public class Categorie {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_categorie", nullable = false)
     private Integer idCategorie;
 

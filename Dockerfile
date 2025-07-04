@@ -1,5 +1,5 @@
 # 1) Build de l’application avec Maven
-FROM maven:3.9.2-eclipse-temurin-17 AS build
+FROM maven:3.9.10-eclipse-temurin-21 AS build
 WORKDIR /app
 
 # Copie des fichiers de config et téléchargement des dépendances
@@ -12,7 +12,7 @@ COPY src src
 RUN ./mvnw package -DskipTests -B
 
 # 2) Image finale légère
-FROM eclipse-temurin:17-jdk-jammy
+FROM eclipse-temurin:21-jdk-jammy
 WORKDIR /app
 
 # Exposez le port Spring Boot

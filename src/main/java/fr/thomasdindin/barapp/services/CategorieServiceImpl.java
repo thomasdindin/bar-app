@@ -6,6 +6,7 @@ import fr.thomasdindin.barapp.mappers.CategorieMapper;
 import fr.thomasdindin.barapp.repositories.CategorieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -16,16 +17,21 @@ public class CategorieServiceImpl implements CategorieService{
     private final CategorieRepository categorieRepository;
 
     @Override
+    @Transactional
     public void deleteCategory(int id) {
         categorieRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
+
     public CategorieDto createCategory(CategorieDto categorie) {
         return CategorieMapper.toDto(categorieRepository.save(CategorieMapper.toEntity(categorie)));
     }
 
     @Override
+    @Transactional
+
     public CategorieDto updateCategory(CategorieDto categorie) {
         return CategorieMapper.toDto(categorieRepository.save(CategorieMapper.toEntity(categorie)));
     }

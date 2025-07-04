@@ -9,6 +9,7 @@ import fr.thomasdindin.barapp.repositories.CocktailRepository;
 import fr.thomasdindin.barapp.repositories.VarianteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class CocktailServiceImpl implements CocktailService {
     private final VarianteRepository varianteRepository;
 
     @Override
+    @Transactional
     public CocktailDto createCocktail(CocktailDto cocktail) {
         Cocktail entity = CocktailMapper.toEntity(cocktail);
         // Extract variants and clear to get generated ID first
@@ -53,6 +55,7 @@ public class CocktailServiceImpl implements CocktailService {
     }
 
     @Override
+    @Transactional
     public CocktailDto updateCocktail(CocktailDto details) {
         Cocktail entity = CocktailMapper.toEntity(details);
         java.util.Set<Variante> variants = new java.util.LinkedHashSet<>(entity.getVariantes());
@@ -67,6 +70,7 @@ public class CocktailServiceImpl implements CocktailService {
     }
 
     @Override
+    @Transactional
     public void deleteCocktail(int id) {
         if(!cocktailRepository.existsById(id)) {
             throw new ResourceAccessException("Cocktail with id " + id + " not found");

@@ -5,6 +5,7 @@ import fr.thomasdindin.barapp.entities.Ingredient;
 import fr.thomasdindin.barapp.services.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class IngredientController {
     private final IngredientService ingredientService;
 
     @PostMapping
+    @PreAuthorize("hasRole('BARMAKER')")
     public ResponseEntity<IngredientDto> createIngredient(@RequestBody IngredientDto ingredient) {
         return ResponseEntity.ok(ingredientService.createIngredient(ingredient));
     }
@@ -31,11 +33,13 @@ public class IngredientController {
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('BARMAKER')")
     public ResponseEntity<IngredientDto> updateIngredient(@RequestBody IngredientDto ingredient) {
         return ResponseEntity.ok(ingredientService.updateIngredient(ingredient));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('BARMAKER')")
     public ResponseEntity<Void> deleteIngredient(@PathVariable int id) {
         ingredientService.deleteIngredient(id);
         return ResponseEntity.noContent().build();
